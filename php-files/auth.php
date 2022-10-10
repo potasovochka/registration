@@ -6,11 +6,13 @@ $pass = filter_var(trim($_POST['pass']));
 $pass = md5($pass."frg");
 
 // Подключаемся в БД
-$mysql = new mysqli('localhost', 'root', '', 'regusers');
+// Старый способ: $mysql = new mysqli('localhost', 'root', '', 'regusers');
+$mysql = new PDO('mysql:host=localhost;dbname=regusers;charset=utf8', 'root', '');
 // Отправляем запрос на выборку данных (логин и пароль) из таблицы Users
 $result = $mysql->query("SELECT * FROM `users` WHERE `login` = '$login' AND `pass` = '$pass'");
 // Получение результата выборки запроса из таблицы Users, с помещением результата в массив
-$user = $result->fetch_assoc();
+// Старый способ: $user = $result->fetch_assoc();
+$user = $mysql->fetchAll(PDO::FETCH_ASSOC);
 // Проверка наличия данных в массиве (если длина массива = 0)
 if(count($user) == 0){
     echo "Такой пользователь не найден";
@@ -21,6 +23,6 @@ if(count($user) == 0){
 */
 setcookie('user', $user['name'], time() + 3600, "/");
 // Закрываем соединение с БД
-$mysql->close();
+//$mysql->close();
 // Выполняем переадресацию на главную
 header('Location: /');

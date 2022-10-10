@@ -15,11 +15,12 @@ if(mb_strlen($login) < 5 || mb_strlen($login) > 50){
 // Хэш для пароля
 $pass = md5($pass."frg");
 // Подключение к БД
-$mysql = new mysqli('localhost', 'root', '','regusers');
+// Старый способ: $mysql = new mysqli('localhost', 'root', '','regusers');
+$mysql = new PDO('mysql:host=localhost;dbname=regusers', 'root', '');
 // Выполнение запроса на добавление полученных значений в таблицу
 $mysql->query("INSERT INTO `users` (`login`, `pass`, `name`) VALUES ('$login', '$pass', '$name')");
 // Закрываем соединение с БД
-$mysql->close();
+//$mysql->close();
 // Выполняем переадресацию на главную страницу с формами
 header('Location: /');
 exit();
